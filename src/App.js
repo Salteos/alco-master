@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import { useReducer } from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
+import {
+  CocktailsContext,
+  cocktailsReducer,
+  initialState,
+} from './reducers/cocktailsReducer';
+import { SearchCocktail, CocktailDetails } from './pages';
+import { NavBar } from './components';
 
-function App() {
+const App = () => {
+  const [state, dispatch] = useReducer(cocktailsReducer, initialState);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <CocktailsContext.Provider value={{ state, dispatch }}>
+      <Router>
+        <NavBar />
+        <Switch>
+          <Route path="/" component={SearchCocktail} exact />
+          <Route path="/cocktail/:id" component={CocktailDetails} />
+          <Redirect to="/" />
+        </Switch>
+      </Router>
+    </CocktailsContext.Provider>
   );
-}
+};
 
 export default App;
